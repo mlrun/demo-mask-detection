@@ -25,6 +25,8 @@ for gpu in tf.config.experimental.list_physical_devices("GPU"):
 
 import mlrun
 import mlrun.frameworks.tf_keras as mlrun_tf_keras
+import boto3
+from urllib.parse import urlparse
 
 
 def _get_datasets(
@@ -43,13 +45,37 @@ def _get_datasets(
     # Build the dataset going through the classes directories and collecting the images:
     images = []
     labels = []
+    images_files = []
     for label, directory in enumerate(["with_mask", "without_mask"]):
-        images_directory = os.path.join(dataset_path, directory)
-        images_files = [
-            os.path.join(images_directory, file)
-            for file in os.listdir(images_directory)
-            if os.path.isfile(os.path.join(images_directory, file))
-        ]
+        if dataset_path.startswith('s3://'):
+            parsed = urlparse(dataset_path)
+            bucket_name = parsed.netloc
+            prefix = parsed.path.lstrip('/') + directory
+            local_folder = "./local_images"
+            s3 = boto3.client('s3')
+            os.makedirs(local_folder, exist_ok=True)
+            # List and download all objects
+            paginator = s3.get_paginator("list_objects_v2")
+            for page in paginator.paginate(Bucket=bucket_name, Prefix=prefix):
+                for obj in page.get("Contents", []):
+                    key = obj["Key"]
+                    filename = os.path.join(local_folder, os.path.basename(key))
+                    # Skip "directory-like" keys (i.e., those ending in "/")
+                    if key.endswith("/"):
+                        continue
+                    try:
+                        s3.download_file(bucket_name, key, filename)
+                        images_files.append(filename)
+                    except Exception as e:
+                        print(f"Failed to download {key}: {e}")
+        else:
+            images_directory = os.path.join(dataset_path, directory)
+            images_files = [
+                os.path.join(images_directory, file)
+                for file in os.listdir(images_directory)
+                if os.path.isfile(os.path.join(images_directory, file))
+            ]
+
         for image_file in images_files:
             image = keras.preprocessing.image.load_img(
                 image_file, target_size=(224, 224)

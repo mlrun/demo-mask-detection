@@ -38,7 +38,7 @@ def resize(event: Dict) -> List[Image.Image]:
     for image_url in images_urls:
         # Get the image:
         urllib.request.urlretrieve(image_url, "temp.png")
-        image = Image.open("temp.png")
+        image = Image.open("temp.png").convert("RGB")
         # Resize it:
         image = image.resize((224, 224))
         # Collect it:

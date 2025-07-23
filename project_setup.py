@@ -28,7 +28,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
     default_image = project.get_param(key="default_image", default=None)
     build_image = project.get_param(key="build_image", default=False)
     use_gpu = project.get_param(key="use_gpu", default=False)
-    framework = project.get_param(key="use_gpu", default="tf-keras")
+    framework = project.get_param(key="framework", default="tf-keras")
 
     if not source:
         source = "git://github.com/mlrun/demo-mask-detection.git"
@@ -69,7 +69,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
     onnx_func = project.set_function("hub://onnx_utils", name="onnx-utils")
 
     # Set the training workflow:
-    project.set_workflow("main", os.path.join(framework, "workflow.py"), embed=True)
+    project.set_workflow("mask_detection_workflow", os.path.join(framework, "workflow.py"), embed=True)
 
     # Save and return the project:
     project.save()

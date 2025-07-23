@@ -119,7 +119,7 @@ def _get_datasets(
     )
 
 
-def _get_model() -> keras.Model:
+def _get_model(model_name:str = "mask_detector") -> keras.Model:
     """
     Create the Mask Detection model based on MobileNetV2.
 
@@ -142,7 +142,7 @@ def _get_model() -> keras.Model:
 
     # Place the head FC model on top of the base model (this will become the actual model we will train):
     model = keras.Model(
-        name="mask_detector", inputs=base_model.input, outputs=head_model
+        name=model_name, inputs=base_model.input, outputs=head_model
     )
 
     # Loop over layers in the base model and freeze them so they will not be updated during the first training process:
@@ -158,6 +158,7 @@ def train(
     batch_size: int = 32,
     lr: float = 1e-4,
     epochs: int = 3,
+    model_name: str = "mask_detector"
 ):
     """
     The training handler. Create the Mask Detection model and run training using the given parameters. The training is
@@ -175,10 +176,10 @@ def train(
     )
 
     # Get the model:
-    model = _get_model()
+    model = _get_model(model_name=model_name)
 
     # Apply MLRun's interface for tf.keras:
-    mlrun_tf_keras.apply_mlrun(model=model, model_name="mask_detector", context=context)
+    mlrun_tf_keras.apply_mlrun(model=model, model_name=model_name, context=context)
 
     # Initialize the optimizer:
     optimizer = keras.optimizers.Adam(learning_rate=lr)

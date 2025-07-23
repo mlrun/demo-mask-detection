@@ -51,14 +51,12 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
         func=os.path.join(framework, "training-and-evaluation.py"),
         name="training-and-evaluation",
         kind="job",
-        image=project.default_image
     ).save()
         
     project.set_function(
         func=os.path.join(framework, "serving.py"),
         name="serving", 
         kind="serving", 
-        image=project.default_image,
     ).save()
 
     project.set_function("hub://open_archive", name="open-archive").save()

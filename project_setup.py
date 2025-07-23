@@ -54,10 +54,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
         kind="job",
         image=project.default_image
     ).save()
-
-    if not mlrun.mlconf.is_ce_mode():
-        project.get_function("training-and-evaluation").apply(mlrun.auto_mount())
-
+        
     project.set_function(
         func=os.path.join(framework, "serving.py"),
         name="serving", 
@@ -66,6 +63,10 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
     ).save()
 
     project.set_function("hub://open_archive", name="open-archive").save()
+    if not mlrun.mlconf.is_ce_mode():
+        project.get_function("training-and-evaluation").apply(mlrun.auto_mount())
+        project.get_function("open-archive").apply(mlrun.auto_mount())
+        
     onnx_func = project.set_function("hub://onnx_utils", name="onnx-utils")
 
     # Set the training workflow:

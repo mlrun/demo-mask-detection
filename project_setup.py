@@ -49,7 +49,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
         
     # Setting functions
     project.set_function(
-        os.path.join(framework, "training-and-evaluation.py"),
+        func=os.path.join(framework, "training-and-evaluation.py"),
         name="training-and-evaluation",
         kind="job",
         image=project.default_image
@@ -59,7 +59,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
         project.get_function("training-and-evaluation").apply(mlrun.auto_mount())
 
     project.set_function(
-        os.path.join(framework, "serving.py"),
+        func=os.path.join(framework, "serving.py"),
         name="serving", 
         kind="serving", 
         image=project.default_image,

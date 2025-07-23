@@ -32,8 +32,8 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
 
     if not source and not project.default_image:
         source = "git://github.com/mlrun/demo-mask-detection.git"
-    print(f"Project Source: {source}")
-    project.set_source(source=source, pull_at_runtime=True)
+        print(f"Project Source: {source}")
+        project.set_source(source=source, pull_at_runtime=True)
 
     # Set default image:
     if default_image:

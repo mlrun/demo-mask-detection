@@ -30,8 +30,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
     use_gpu = project.get_param(key="use_gpu", default=False)
     framework = project.get_param(key="framework", default="tf-keras")
 
-    if not source and not project.default_image:
-        source = "git://github.com/mlrun/demo-mask-detection.git"
+    if source:
         print(f"Project Source: {source}")
         project.set_source(source=source, pull_at_runtime=True)
 
@@ -40,7 +39,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
         project.set_default_image(default_image)
 
     if build_image:
-        project.build_image(image=f'.{project.name}',
+        project.build_image(image=f'.mask-detection',
                     base_image='mlrun/mlrun-gpu' if use_gpu else 'mlrun/mlrun',
                     requirements=['tensorflow==2.14.0', 'typing_extensions==4.14.1', 'keras<3.0.0'],
                     overwrite_build_params=True,

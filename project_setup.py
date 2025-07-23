@@ -25,7 +25,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
     """
     # Set the project git source:
     source = project.get_param(key="source")
-    default_image = project.get_param(key="default_image", default=None)
+    default_image = project.get_param(key="default_image", default='.mask-detection')
     build_image = project.get_param(key="build_image", default=False)
     use_gpu = project.get_param(key="use_gpu", default=False)
     framework = project.get_param(key="framework", default="tf-keras")

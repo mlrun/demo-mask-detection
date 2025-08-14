@@ -41,7 +41,7 @@ def setup(project: mlrun.projects.MlrunProject) -> mlrun.projects.MlrunProject:
     if build_image:
         project.build_image(image=f'.mask-detection',
                     base_image='mlrun/mlrun-gpu' if use_gpu else 'mlrun/mlrun',
-                    requirements=['tensorflow==2.14.0', 'typing_extensions==4.14.1', 'keras<3.0.0'],
+                    requirements=['tensorflow==2.14.0', 'typing_extensions==4.14.1', 'keras<3.0.0', 'plotly'],
                     overwrite_build_params=True,
                     set_as_default=True,
                     )

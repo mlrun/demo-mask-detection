@@ -52,7 +52,7 @@ def _get_datasets(
             bucket_name = parsed.netloc
             prefix = parsed.path.lstrip('/') + directory
             local_folder = "./local_images"
-            s3 = boto3.client('s3') if not os.getenv("S3_ENDPOINT_URL") else boto3.client('s3', endpoint_url=os.getenv("S3_ENDPOINT_URL"))
+            s3 = boto3.client('s3') if not os.getenv("AWS_ENDPOINT_URL_S3") else boto3.client('s3', endpoint_url=os.getenv("AWS_ENDPOINT_URL_S3"))
             os.makedirs(local_folder, exist_ok=True)
             # List and download all objects
             paginator = s3.get_paginator("list_objects_v2")
